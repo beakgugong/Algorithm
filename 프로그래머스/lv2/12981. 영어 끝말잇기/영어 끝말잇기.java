@@ -11,7 +11,7 @@ class Solution {
         }
         for(int i=0; i<words.length-1; i++){
             if(stack.contains(words[i+1])){
-                System.out.println("haha");
+
                 return cal(i, n , answer);
             }
             else if(words[i].charAt(words[i].length()-1)==que.peek().charAt(0)){
