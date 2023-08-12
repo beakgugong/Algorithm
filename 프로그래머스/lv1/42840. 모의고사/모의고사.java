@@ -19,8 +19,6 @@ class Solution {
                 answer1++;
             }
             num1++;
-        }
-        for(int i=0; i<answers.length; i++){
             if(num2>7){
                 num2=0;
             }
@@ -28,8 +26,6 @@ class Solution {
                 answer2++;
             }
             num2++;
-        }
-        for(int i=0; i<answers.length; i++){
             if(num3>9){
                 num3=0;
             }
@@ -38,6 +34,7 @@ class Solution {
             }
             num3++;
         }
+       
         if(answer1>answer2&&answer1>answer3)answer.add(1);
         else if(answer2>answer1&&answer2>answer3)answer.add(2);
         else if(answer3>answer1&&answer3>answer2)answer.add(3);
