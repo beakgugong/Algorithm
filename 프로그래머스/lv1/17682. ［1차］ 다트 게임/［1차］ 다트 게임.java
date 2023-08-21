@@ -24,14 +24,10 @@ class Solution {
                 cal=0;
                 cal = dartResult.charAt(i)-'0';
                 System.out.println(cal);
+                    }
                 }
-                }
-                catch(NullPointerException e){
-                    
-                }
-                
-                
-                
+                catch(NullPointerException e){   
+                } 
             }
             else if(dartResult.charAt(i)=='D'){
                 cal*=cal;
