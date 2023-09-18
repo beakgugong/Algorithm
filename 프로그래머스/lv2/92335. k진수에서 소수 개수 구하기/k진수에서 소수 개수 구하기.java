@@ -18,7 +18,7 @@ class Solution {
         int num = 0;
         for(int i=0; i<change.size(); i++){
             if(change.get(i)==1){
-                    num++;    
+                    continue;
                 }
             for(int j=2; j<=Math.sqrt(change.get(i)); j++){
                 
