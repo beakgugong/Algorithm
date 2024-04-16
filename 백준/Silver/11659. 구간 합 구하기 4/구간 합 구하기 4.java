@@ -22,12 +22,16 @@ public class Main {
       dp[1][i][0] = dp[1][i-1][0]+number[i];
     }
 
+    StringBuilder stringBuilder = new StringBuilder();
+
     for (int k=0; k<M; k++){
       stringTokenizer = new StringTokenizer(br.readLine());
       int i = Integer.valueOf(stringTokenizer.nextToken());
       int j = Integer.valueOf(stringTokenizer.nextToken());
+      long answer = dp[1][j][0]-dp[1][i-1][0];
 
-      System.out.println(dp[1][j][0]-dp[1][i-1][0]);
+      stringBuilder.append(answer+"\n");
     }
+    System.out.println(stringBuilder);
   }
 }
