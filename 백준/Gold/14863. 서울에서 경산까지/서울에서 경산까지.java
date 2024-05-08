@@ -6,17 +6,7 @@ public class Main {
     StringTokenizer stringTokenizer = new StringTokenizer(br.readLine());
     int n = Integer.parseInt(stringTokenizer.nextToken());
     int k = Integer.parseInt(stringTokenizer.nextToken());
-    PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(new Comparator<int[]>() {
-      @Override
-      public int compare(int[] o1, int[] o2) {
-        if (o2[1]==o1[1]){
-          return o2[0]-o1[0];
-        }
-        return o2[1]-o1[1];
-      }
-    });
-
-    Queue<int[]> queue = new LinkedList<>();
+    long[][]dp = new long[n][100001];
 
     int[][] city = new int[n][4];
 
@@ -32,27 +22,25 @@ public class Main {
       city[i][2] = bicycleTime;
       city[i][3] = bicycleMoney;
     }
-
-    queue.add(new int[]{city[0][0],city[0][1]});
-    queue.add(new int[]{city[0][2],city[0][3]});
+    dp[0][city[0][0]] = city[0][1];
+    dp[0][city[0][2]] = Math.max(city[0][3],dp[0][city[0][2]]);
 
     for (int i=1; i<n; i++){
-      while (!queue.isEmpty()){
-        priorityQueue.add(queue.poll());
-      }
-      while (!priorityQueue.isEmpty()){
-        int[] tmp = priorityQueue.poll();
-        if (tmp[0]+city[i][0]<=k){
-          queue.add(new int[]{tmp[0]+city[i][0],tmp[1]+city[i][1]});
-        }
-        if (tmp[0]+city[i][2]<=k){
-          queue.add(new int[]{tmp[0]+city[i][2],tmp[1]+city[i][3]});
+      for (int j=0; j<=k; j++) {
+        if (dp[i-1][j]>0){
+          if (j+city[i][0]<=k){
+            dp[i][j+city[i][0]] = Math.max(dp[i][j+city[i][0]],dp[i-1][j]+city[i][1]);
+          }
+          if (j+city[i][2]<=k){
+            dp[i][j+city[i][2]] = Math.max(dp[i][j+city[i][2]],dp[i-1][j]+city[i][3]);
+          }
         }
       }
     }
-    int max = Integer.MIN_VALUE;
-    while (queue.size()!=0){
-      max = Math.max(max, queue.poll()[1]);
+
+    long max = Integer.MIN_VALUE;
+    for (int i=0; i<=k; i++){
+      max = Math.max(dp[n-1][i],max);
     }
     System.out.println(max);
   }
