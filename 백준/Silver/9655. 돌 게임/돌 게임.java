@@ -1,21 +1,16 @@
-import java.awt.image.AffineTransformOp;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main {
-
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int N = Integer.valueOf(br.readLine());
-    String[] dp = new String[1001];
 
-    for (int i=1; i< dp.length; i++){
-      if (i%2==0) {
-        dp[i] = "CY";
-      }
-      else dp[i] = "SK";
+    if (N % 2 == 0) {
+      System.out.println("CY");
+    } else {
+      System.out.println("SK");
     }
-    System.out.println(dp[N]);
 
   }
 }
