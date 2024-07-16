@@ -6,11 +6,12 @@ import java.util.Comparator;
 import java.util.StringTokenizer;
 
 public class Main {
+  static int K;
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     StringTokenizer stringTokenizer = new StringTokenizer(br.readLine());
     int N = Integer.valueOf(stringTokenizer.nextToken());
-    int K = Integer.valueOf(stringTokenizer.nextToken());
+    K = Integer.valueOf(stringTokenizer.nextToken());
     ArrayList<Country> arrayList = new ArrayList<>();
 
     for (int i = 0; i < N; i++) {
@@ -46,6 +47,10 @@ public class Main {
       if (c.tie){
         c.rank = (rank-1);
         count++;
+        if (rightK(c.num)){
+          System.out.println(c.rank);
+          return;
+        }
         continue;
       }
       if (count>0){
@@ -53,12 +58,25 @@ public class Main {
         c.rank = rank;
         count=0;
         rank++;
+        if (rightK(c.num)){
+          System.out.println(c.rank);
+          return;
+        }
         continue;
       }
         c.rank = rank;
         rank++;
+      if (rightK(c.num)){
+        System.out.println(c.rank);
+        return;
+      }
     }
-    System.out.println(arrayList.get(K-1).rank);
+  }
+  static boolean rightK(int num){
+    if (num==K){
+      return true;
+    }
+    return false;
   }
   static class Country{
     int num;
