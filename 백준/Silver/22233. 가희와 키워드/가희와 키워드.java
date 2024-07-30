@@ -1,6 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -9,20 +9,22 @@ public class Main {
     StringTokenizer stringTokenizer = new StringTokenizer(br.readLine());
     int N = Integer.valueOf(stringTokenizer.nextToken());
     int M = Integer.valueOf(stringTokenizer.nextToken());
-    HashMap<String, Integer> hashMap = new HashMap<>();
+    HashSet<String> hashSet = new HashSet<>();
+    StringBuffer stringBuffer = new StringBuffer();
 
     for (int i=0; i<N; i++){
-      hashMap.put(br.readLine(), 1);
+      hashSet.add(br.readLine());
     }
 
     for (int i=0; i<M; i++){
       String[] strings = br.readLine().split(",");
 
       for (int j=0; j<strings.length; j++){
-        if (hashMap.containsKey(strings[j]));
-        hashMap.remove(strings[j]);
+        if (hashSet.contains(strings[j]));
+        hashSet.remove(strings[j]);
       }
-      System.out.println(hashMap.size());
+      stringBuffer.append(hashSet.size()+"\n");
     }
+    System.out.println(stringBuffer);
   }
 }
