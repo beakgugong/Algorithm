@@ -61,13 +61,15 @@ class Main {
       }
     }
 
+    StringBuffer stringBuffer = new StringBuffer();
     for (int i=0; i<answer.length; i++){
       for (int j=0; j<answer[i].length; j++){
         {
-          System.out.print(answer[i][j]+" ");
+          stringBuffer.append(answer[i][j]+" ");
         }
       }
-      System.out.println();
+      stringBuffer.append("\n");
     }
+    System.out.println(stringBuffer);
   }
 }
