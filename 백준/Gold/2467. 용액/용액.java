@@ -1,54 +1,64 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Main {
+class Main {
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int N = Integer.valueOf(br.readLine());
     StringTokenizer stringTokenizer = new StringTokenizer(br.readLine());
-    int[] arr = new int[N];
-    for (int i = 0; i < N; i++) {
-      arr[i] = Integer.valueOf(stringTokenizer.nextToken());
+    int[] fluid = new int[N];
+    int[] record = new int[N];
+    int min = Integer.MAX_VALUE;
+    int answer = 0;
+    int one = 0;
+    int two = 0;
+
+    for (int i=0; i<N; i++){
+      fluid[i] = Integer.valueOf(stringTokenizer.nextToken());
+    }
+    if (N==2){
+      System.out.println(fluid[0]+" "+fluid[1]);
+      return;
     }
 
-    int[] answer = {1000000000, 1000000000};
-    int[] tmp = {1000000000, 1000000000};
+    for (int i=0; i<N-1; i++){
+      one = fluid[i];
 
-    for (int i = 0; i < arr.length; i++) {
-      int candy = arr[i];
-      int low = i+1;
-      int high = arr.length-1;
+      int left = i+1;
+      int right = N-1;
+      int mid = (left+right)/2;
+      two = fluid[mid];
 
-      while (low <= high) {
-        int mid = (low + high) / 2;
+      while (left<right){
+        mid = (left+right)/2;
+        two = fluid[mid];
 
-        if (candy+arr[mid]>0) {
-          if (Math.abs(candy + arr[mid]) < Math.abs(tmp[0]+tmp[1])) {
-            high = mid - 1;
-            tmp[0] = candy;
-            tmp[1] = arr[mid];
-          }
-          else high = mid-1;
-        } else if (candy+arr[mid]<=0){
-          if (Math.abs(candy + arr[mid]) < Math.abs(tmp[0]+tmp[1])) {
-            low = mid + 1;
-            tmp[0] = candy;
-            tmp[1] = arr[mid];
-          }
-          else low = mid+1;
+        if (two+one>0){
+          right = mid-1;
+        }
+        else if (two + one < 0) {
+          left = mid + 1;
+        } else {
+          System.out.println(one<two?one+" "+two:two+" "+one);
+          return;
         }
       }
 
-      if (Math.abs(answer[0] + answer[1]) > Math.abs(tmp[0] + tmp[1])) {
-        answer[0] = tmp[0];
-        answer[1] = tmp[1];
+      if (left==right){
+        if (Math.abs(one+two)>Math.abs(one+fluid[(left+right)/2])){
+          two = fluid[(left+right)/2];
+        }
       }
-      tmp[0] = 1000000000;
-      tmp[1] = 1000000000;
-    }
-    Arrays.sort(answer);
-    System.out.println(answer[0]+" "+answer[1]);
-  }
 
+      record[i] = two;
+      if (min>Math.abs(one+two)){
+        min=Math.abs(one+two);
+        answer = i;
+      }
+    }
+    System.out.println(fluid[answer]+" "+record[answer]);
+  }
 }
