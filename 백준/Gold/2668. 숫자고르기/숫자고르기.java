@@ -1,45 +1,43 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.StringTokenizer;
 
-public class Main {
+class Main {
   static int N;
-  static int[] arr;
-  static boolean[] visit;
   static ArrayList<Integer> arrayList;
+  static boolean[] visit;
+  static int[] arr;
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     N = Integer.valueOf(br.readLine());
-    arr = new int[N+1];
-    visit = new boolean[N+1];
     arrayList = new ArrayList<>();
+    visit = new boolean[N+1];
+    arr = new int[N+1];
 
-    for (int i=1; i<N+1; i++){
-      arr[i] = Integer.valueOf(br.readLine());
+    for (int i=0; i<N; i++){
+      arr[i+1] = Integer.valueOf(br.readLine());
     }
-    for (int i=1; i<N+1; i++){
+
+    for (int i=1; i<=N; i++){
       visit[i] = true;
       dfs(i, i);
       visit[i] = false;
     }
-
-    Collections.sort(arrayList);
     System.out.println(arrayList.size());
-    for (int i=0; i<arrayList.size(); i++){
-      System.out.println(arrayList.get(i));
+    for (int i : arrayList){
+      System.out.println(i);
     }
-
   }
-  static void dfs(int first, int second){
-    if (!visit[arr[first]]){
-      visit[arr[first]] = true;
-      dfs(arr[first],second);
-      visit[arr[first]] = false;
+
+  private static void dfs(int up, int down) {
+    if (!visit[arr[up]]){
+      visit[arr[up]] = true;
+      dfs(arr[up], down);
+      visit[arr[up]] = false;
     }
-    if (arr[first]==second){
-      arrayList.add(second);
+    if (arr[up]==down){
+      arrayList.add(down);
     }
   }
 }
