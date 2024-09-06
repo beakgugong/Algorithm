@@ -1,62 +1,72 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-public class Main {
-  static int[] dx = {0,-1,0,1};
-  static int[] dy = {1,0,-1,0};
+class Main {
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    StringTokenizer stringTokenizer;
-    int number = 1;
+    int N= Integer.valueOf(br.readLine());
+    int count = 1;
 
-    while (true) {
-      int N = Integer.valueOf(br.readLine());
-
-      if (N==0){
-        break;
-      }
-
-      int[][] map = new int[N][N];
-      boolean[][] visit = new boolean[N][N];
-      Queue<int[]> queue = new LinkedList<>();
-      int[][] costMap = new int[N][N];
-
+    while (N!=0){
+      int[][] arr = new int[N][N];
+      StringTokenizer stringTokenizer;
       for (int i=0; i<N; i++){
         stringTokenizer = new StringTokenizer(br.readLine());
         for (int j=0; j<N; j++){
-          map[i][j] = Integer.valueOf(stringTokenizer.nextToken());
-          costMap[i][j] = Integer.MAX_VALUE;
+          arr[i][j] = Integer.valueOf(stringTokenizer.nextToken());
         }
       }
-      queue.add(new int[]{0,0});
-      costMap[0][0] = map[0][0];
-
-      while (!queue.isEmpty()){
-        int y = queue.peek()[0];
-        int x = queue.peek()[1];
-        queue.poll();
-
-        for (int i=0; i<4; i++){
-          int ny = y+dy[i];
-          int nx = x+dx[i];
-
-          if (ny<0||nx<0||nx>N-1||ny>N-1){
-            continue;
-          }
-          if (visit[ny][nx]&&costMap[ny][nx]<=costMap[y][x]+map[ny][nx]){
-            continue;
-          }
-          costMap[ny][nx] = costMap[y][x]+map[ny][nx];
-          visit[ny][nx] = true;
-          queue.add(new int[]{ny,nx});
-        }
-      }
-      System.out.println("Problem "+number+": "+costMap[N-1][N-1]);
-      number++;
+      System.out.println("Problem "+count+": "+bfs(arr,N));
+      N = Integer.valueOf(br.readLine());
+      count++;
     }
+
+  }
+  static int bfs(int[][] arr, int n){
+    boolean[][] visit = new boolean[n][n];
+    PriorityQueue<int[]> queue = new PriorityQueue<>(new Comparator<int[]>() {
+      @Override
+      public int compare(int[] o1, int[] o2) {
+        return o1[2]-o2[2];
+      }
+    });
+
+    int[] dx = {0,-1,0,1};
+    int[] dy = {1,0,-1,0};
+    int[][] minValue = new int[n][n];
+    queue.add(new int[]{0,0,arr[0][0]});
+    visit[0][0] = true;
+
+
+    for (int i =0; i<n; i++){
+      Arrays.fill(minValue[0],Integer.MAX_VALUE);
+    }
+
+    while (!queue.isEmpty()){
+      int[] tmp = queue.poll();
+      int x = tmp[0];
+      int y = tmp[1];
+      int money = tmp[2];
+
+      if (x==n-1&&y==n-1){
+        return money;
+      }
+      for (int i=0; i<4; i++){
+        int nx = x+dx[i];
+        int ny = y+dy[i];
+
+        if (nx<0||ny<0||nx>n-1||ny>n-1||visit[ny][nx]){
+          continue;
+        }
+        queue.add(new int[]{nx, ny, arr[ny][nx]+money});
+        visit[ny][nx] = true;
+      }
+    }
+    return arr[n-1][n-1];
   }
 }
