@@ -4,37 +4,39 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Main {
+class Main {
+  static int N;
+  static int C;
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     StringTokenizer stringTokenizer = new StringTokenizer(br.readLine());
-    int N = Integer.valueOf(stringTokenizer.nextToken());
-    int C = Integer.valueOf(stringTokenizer.nextToken());
-    int[] map = new int[N];
+    N = Integer.valueOf(stringTokenizer.nextToken());
+    C = Integer.valueOf(stringTokenizer.nextToken());
+    int[] house = new int[N];
 
     for (int i=0; i<N; i++){
-      map[i] = Integer.valueOf(br.readLine());
+      house[i] = Integer.valueOf(br.readLine());
     }
-    Arrays.sort(map);
+    Arrays.sort(house);
 
-    int low = 1;
-    int high = map[N-1];
+    int low = 0;
+    int high = house[N-1];
 
     while (low<=high){
       int mid = (low+high)/2;
       int count = 1;
-      int before = map[0];
+      int start = house[0];
 
       for (int i=1; i<N; i++){
-        if (before+mid<=map[i]){
-          before = map[i];
+        if (house[i]>=start+mid){
+          start = house[i];
           count++;
         }
       }
+
       if (count>=C){
         low = mid+1;
-      }
-      else {
+      }else if (count<C){
         high = mid-1;
       }
     }
