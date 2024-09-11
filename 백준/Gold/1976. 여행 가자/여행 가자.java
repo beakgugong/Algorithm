@@ -1,62 +1,58 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
-public class Main {
-  static int[][] map;
-  static int M;
-  static int N;
-  static boolean[] visit;
-  static Map<Integer,Integer> hashMap;
+class Main {
+    static boolean[][] cityInfo;
+    static int N;
+    static int M;
+    static boolean[] visit;
+    static Set<Integer> set = new HashSet<>();
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    StringTokenizer stringTokenizer;
     N = Integer.valueOf(br.readLine());
     M = Integer.valueOf(br.readLine());
-    map = new int[N+1][N+1];
-    visit = new boolean[N+1];
-    hashMap = new HashMap<>();
+    cityInfo = new boolean[N][N];
+    visit = new boolean[N];
+    StringTokenizer stringTokenizer;
 
 
-    for (int i=1; i<N+1; i++){
+    for (int i=0; i<N; i++) {
       stringTokenizer = new StringTokenizer(br.readLine());
-      for (int j=1; j<N+1; j++){
-        map[i][j] = Integer.valueOf(stringTokenizer.nextToken());
+      for (int j=0; j<N; j++){
+        int tmp = Integer.valueOf(stringTokenizer.nextToken());
+        cityInfo[i][j] = tmp==0?false:true;
       }
     }
 
     stringTokenizer = new StringTokenizer(br.readLine());
     int start = 0;
-    for (int i=0; i<M; i++) {
-      start =Integer.valueOf(stringTokenizer.nextToken());
-      hashMap.put(start ,1);
+
+    for (int i=0; i<M; i++){
+      start = Integer.valueOf(stringTokenizer.nextToken())-1;
+      set.add(start);
     }
 
     dfs(start);
-//    for (Integer i : hashMap.keySet()){
-//      System.out.println(i);
-//    }
-    if (hashMap.size()==0){
+    if (set.isEmpty()) {
       System.out.println("YES");
-    }
-    else {
+    } else {
       System.out.println("NO");
     }
-
   }
-  static void dfs(int i){
-    if (hashMap.containsKey(i)){
-      hashMap.remove(i);
+  static void dfs(int num){
+    if (set.contains(num)){
+      set.remove(num);
     }
-    for (int k=1; k<N+1; k++){
-      if (map[i][k]==0||visit[k]||i==k){
+    for (int i=0; i<N; i++){
+      if (cityInfo[num][i]==false||visit[i]){
         continue;
       }
       visit[i] = true;
-      dfs(k);
+      dfs(i);
     }
     return;
   }
