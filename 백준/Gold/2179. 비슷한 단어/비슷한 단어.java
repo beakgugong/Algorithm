@@ -1,41 +1,49 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-class Main {
-  public static void main(String[] args) throws IOException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    int N = Integer.valueOf(br.readLine());
-    String[] arr = new String[N];
+import java.util.ArrayList;
 
-    for (int i=0; i<N; i++){
-      arr[i] = br.readLine();
-    }
+public class Main {
+	
+	static int check(String s1, String s2) {
+		int cnt = 0, size = Math.min(s1.length(), s2.length());
+		for(int i=0;i<size;i++) {
+			if(s1.charAt(i)==s2.charAt(i)) cnt++;
+			else break;
+		}
+		return cnt;
+	}
+	
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		
+		String[] list = new String[N];
+		for(int i=0;i<N;i++) {
+			list[i] = br.readLine();
+		}
+		
+		int ans1=-1,ans2=-1;
+		int max=Integer.MIN_VALUE;
+		
+		for(int i=0;i<N-1;i++) {
+			String s1 = list[i];
+			
+			for(int j=i+1;j<N;j++) {
+				int cnt=0;
+				String s2 = list[j];
 
-    int max = 0;
-    String[] answer = new String[2];
-
-    for (int i=0; i<N-1; i++){
-      String tmp = arr[i];
-      for (int j=i+1; j<N; j++){
-        int len = tmp.length()<arr[j].length()?tmp.length():arr[j].length();
-        int count = 0;
-
-        for (int k=0; k<len; k++){
-          if (tmp.charAt(k)==arr[j].charAt(k)){
-            count++;
-          }else {
-            break;
-          }
-        }
-        if (max<count){
-          answer[0] = tmp;
-          answer[1] = arr[j];
-          max = count;
-        }
-      }
-    }
-
-    System.out.println(answer[0]);
-    System.out.println(answer[1]);
-  }
+				cnt = check(s1,s2);
+				
+				if(cnt>max) {
+					ans1 = i;
+					ans2 = j;
+					max = cnt;
+				}
+			}
+		}
+		
+		System.out.println(list[ans1]);
+		System.out.println(list[ans2]);
+	}
 }
