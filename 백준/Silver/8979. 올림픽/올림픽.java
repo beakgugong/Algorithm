@@ -1,97 +1,39 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.StringTokenizer;
 
-public class Main {
-  static int K;
-  public static void main(String[] args) throws Exception {
+class Main {
+  public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    StringTokenizer stringTokenizer = new StringTokenizer(br.readLine());
-    int N = Integer.valueOf(stringTokenizer.nextToken());
-    K = Integer.valueOf(stringTokenizer.nextToken());
-    ArrayList<Country> arrayList = new ArrayList<>();
-
-    for (int i = 0; i < N; i++) {
-      stringTokenizer = new StringTokenizer(br.readLine());
-      int num = Integer.valueOf(stringTokenizer.nextToken());
-      int gold = Integer.valueOf(stringTokenizer.nextToken());
-      int silver = Integer.valueOf(stringTokenizer.nextToken());
-      int copper = Integer.valueOf(stringTokenizer.nextToken());
-      Country country = new Country(num, gold, silver, copper);
-      arrayList.add(country);
-    }
-
-    Collections.sort(arrayList, new Comparator<Country>() {
-      @Override
-      public int compare(Country o1, Country o2) {
-        if (o2.gold == o1.gold) {
-          if (o2.silver == o1.silver) {
-            if (o2.copper == o1.copper){
-              o1.tie = true;
-            }
-            return o2.copper - o1.copper;
-          }
-          return o2.silver - o1.silver;
-        }
-        return o2.gold - o1.gold;
-      }
-    });
-
+    StringTokenizer st = new StringTokenizer(br.readLine());
+    int num = Integer.parseInt(st.nextToken());
+    int cer = Integer.parseInt(st.nextToken());
+    int arr[][] = new int[num+1][4];
     int rank = 1;
-    int count = 0;
 
-    for (Country c :arrayList){
-      if (c.tie){
-        c.rank = (rank-1);
-        count++;
-        if (rightK(c.num)){
-          System.out.println(c.rank);
-          return;
-        }
-        continue;
-      }
-      if (count>0){
-        rank+=count;
-        c.rank = rank;
-        count=0;
+    for(int i=1; i<=num; i++) {
+      st = new StringTokenizer(br.readLine());
+      int index = Integer.parseInt(st.nextToken());
+      int g = Integer.parseInt(st.nextToken());
+      int s = Integer.parseInt(st.nextToken());
+      int b = Integer.parseInt(st.nextToken());
+      arr[index][0] = g;
+      arr[index][1] = s;
+      arr[index][2] = b;
+    }
+
+    for(int i=1; i<=num; i++) {
+      if(arr[i][0] > arr[cer][0]) {
         rank++;
-        if (rightK(c.num)){
-          System.out.println(c.rank);
-          return;
-        }
-        continue;
       }
-        c.rank = rank;
+      else if(arr[i][0] == arr[cer][0] && arr[i][1] > arr[cer][1]) {
         rank++;
-      if (rightK(c.num)){
-        System.out.println(c.rank);
-        return;
+      }
+      else if(arr[i][0] == arr[cer][0] && arr[i][1] == arr[cer][1] && arr[i][2] > arr[cer][2]) {
+        rank++;
       }
     }
+    System.out.println(rank);
   }
-  static boolean rightK(int num){
-    if (num==K){
-      return true;
-    }
-    return false;
-  }
-  static class Country{
-    int num;
-    int gold;
-    int silver;
-    int copper;
-    int rank;
-    boolean tie;
-
-    public Country(int num, int gold, int silver, int copper) {
-      this.num = num;
-      this.gold = gold;
-      this.silver = silver;
-      this.copper = copper;
-    }
-
-    }
-  }
+}
