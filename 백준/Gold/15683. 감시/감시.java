@@ -81,7 +81,6 @@ class Main {
     return count;
   }
   static class Cctv{
-   int number;
    int[] direction;
 
    static Cctv of(int number){
