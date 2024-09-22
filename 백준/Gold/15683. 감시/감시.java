@@ -1,166 +1,121 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
-public class Main {
-  public static int N, M;
-  public static int[][] map;
-  public static int[][] copyMap;
-  public static int[] output;
-  public static ArrayList<CCTV> cctvList;
-  public static int[] dx = {-1, 0, 1, 0};
-  public static int[] dy = {0, 1, 0, -1};
-  public static int answer = Integer.MAX_VALUE;
+class Main {
+  static int N;
+  static int M;
+  static int[] dx = {0, -1, 0, 1};
+  static int[] dy = {-1, 0, 1, 0};
+  static ArrayList<int[]> cctv = new ArrayList<>();
+  static int anwser = Integer.MAX_VALUE;
+  static int[][] original;
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st = new StringTokenizer(br.readLine());
+    N = Integer.valueOf(st.nextToken());
+    M = Integer.valueOf(st.nextToken());
+    original = new int[N][M];
 
-  public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
-    N = sc.nextInt();
-    M = sc.nextInt();
-    map = new int[N][M];
-    cctvList = new ArrayList<>();
-
-    for (int i = 0; i < N; i++) {
+    for (int i=0; i<N; i++) {
+      st = new StringTokenizer(br.readLine());
       for (int j = 0; j < M; j++) {
-        map[i][j] = sc.nextInt();
-
-        if (map[i][j] != 0 && map[i][j] != 6) {
-          cctvList.add(new CCTV(map[i][j], i, j));
+        original[i][j] = Integer.valueOf(st.nextToken());
+        if (original[i][j]!=0&&original[i][j]!=6){
+          cctv.add(new int[]{i,j});
         }
       }
     }
 
-    output = new int[cctvList.size()];
-    dfs(0, cctvList.size());
+    dfs(original,0);
 
-    System.out.println(answer);
+    System.out.println(anwser);
+
   }
-
-
-  public static void dfs(int depth, int r) {
-    if (depth == r) {
-      copyMap = new int[N][M];
-      for (int i = 0; i < map.length; i++) {
-        System.arraycopy(map[i], 0, copyMap[i], 0, map[i].length);
-      }
-
-      for (int i = 0; i < cctvList.size(); i++) {
-        direction(cctvList.get(i), output[i]);
-      }
-
-      int cnt = 0;
-      for (int i = 0; i < N; i++) {
-        for (int j = 0; j < M; j++) {
-          if (copyMap[i][j] == 0) {
-            cnt++;
-          }
-        }
-      }
-      answer = Math.min(answer, cnt);
+  static void dfs(int[][] map, int count){
+    if (count== cctv.size()){
+      anwser = Math.min(anwser,fourRegion(map));
       return;
     }
+    int[][] copy = new int[map.length][map[0].length];
 
-    for (int i = 0; i < 4; i++) {
-      output[depth] = i;
-      dfs(depth + 1, r);
+
+    int y = cctv.get(count)[0];
+    int x = cctv.get(count)[1];
+
+    int num = map[y][x];
+    Cctv cctv1 = Cctv.of(num);
+
+    for (int i=0; i<4; i++) {
+      for (int j=0; j<map.length; j++){
+        copy[j] = map[j].clone();
+      }
+
+      for (int j = 0; j < cctv1.direction.length; j++) {
+        int ny = y;
+        int nx = x;
+        while (ny >= 0 && nx >= 0 && ny <= N - 1 && nx <= M - 1 && map[ny][nx] != 6) {
+          if (map[ny][nx] == 0) {
+            copy[ny][nx] = 7;
+          }
+          ny += dy[(cctv1.direction[j]+i)%4];
+          nx += dx[(cctv1.direction[j]+i)%4];
+        }
+      }
+      dfs(copy, count + 1);
     }
   }
+  static int fourRegion(int[][] map){
+    int count = 0;
 
-  public static void direction(CCTV cctv, int d) {
-    int cctvNum = cctv.num;
-
-    if (cctvNum == 1) {
-      if (d == 0)
-        watch(cctv, 0); // 상
-      else if (d == 1)
-        watch(cctv, 1); // 우
-      else if (d == 2)
-        watch(cctv, 2); // 하
-      else if (d == 3)
-        watch(cctv, 3); // 좌
-    } else if (cctvNum == 2) {
-      if (d == 0 || d == 2) {
-        watch(cctv, 0);
-        watch(cctv, 2); // 상하
-      } else {
-        watch(cctv, 1);
-        watch(cctv, 3); // 좌우
+    for (int i=0; i< map.length; i++){
+      for (int j=0; j<map[i].length; j++){
+        if (map[i][j]==0){
+          count++;
+        }
       }
-    } else if (cctvNum == 3) {
-      if (d == 0) {
-        watch(cctv, 0);
-        watch(cctv, 1);
-      } else if (d == 1) {
-        watch(cctv, 1);
-        watch(cctv, 2);
-      } else if (d == 2) {
-        watch(cctv, 2);
-        watch(cctv, 3);
-      } else if (d == 3) {
-        watch(cctv, 0);
-        watch(cctv, 3);
-      }
-    } else if (cctvNum == 4) {
-      if (d == 0) {
-        watch(cctv, 0);
-        watch(cctv, 1);
-        watch(cctv, 3);
-      } else if (d == 1) {
-        watch(cctv, 0);
-        watch(cctv, 1);
-        watch(cctv, 2);
-      } else if (d == 2) {
-        watch(cctv, 1);
-        watch(cctv, 2);
-        watch(cctv, 3);
-      } else if (d == 3) {
-        watch(cctv, 0);
-        watch(cctv, 2);
-        watch(cctv, 3);
-      }
-    } else if (cctvNum == 5) {
-      watch(cctv, 0);
-      watch(cctv, 1);
-      watch(cctv, 2);
-      watch(cctv, 3);
     }
+    return count;
   }
+  static class Cctv{
+   int number;
+   int[] direction;
 
-
-  public static void watch(CCTV cctv, int d) {
-    Queue<CCTV> queue = new LinkedList<>();
-    boolean[][] visited = new boolean[N][M];
-
-    queue.add(cctv);
-    visited[cctv.x][cctv.y] = true;
-
-    while (!queue.isEmpty()) {
-      int nx = queue.peek().x + dx[d];
-      int ny = queue.poll().y + dy[d];
-
-      if (nx < 0 || nx >= N || ny < 0 || ny >= M || copyMap[nx][ny] == 6) {
-        break;
-      }
-
-      if (copyMap[nx][ny] == 0) {
-        copyMap[nx][ny] = -1;
-        queue.add(new CCTV(cctv.num, nx, ny));
-      } else {
-        queue.add(new CCTV(cctv.num, nx, ny));
-      }
-    }
-  }
-
-
-  static class CCTV {
-    int num;
-    int x;
-    int y;
-
-    CCTV(int num, int x, int y) {
-      this.num = num;
-      this.x = x;
-      this.y = y;
-    }
+   static Cctv of(int number){
+     Cctv cctv = new Cctv();
+     switch (number){
+       case 1:
+         cctv.direction = new int[1];
+         cctv.direction[0] = 3;
+         break;
+       case 2:
+         cctv.direction = new int[2];
+         cctv.direction[0] = 3;
+         cctv.direction[1] = 1;
+         break;
+       case 3:
+         cctv.direction = new int[2];
+         cctv.direction[0] = 3;
+         cctv.direction[1] = 2;
+         break;
+       case 4:
+         cctv.direction = new int[3];
+         cctv.direction[0] = 3;
+         cctv.direction[1] = 2;
+         cctv.direction[2] = 1;
+         break;
+       case 5:
+         cctv.direction = new int[4];
+         cctv.direction[0] = 3;
+         cctv.direction[1] = 2;
+         cctv.direction[2] = 1;
+         cctv.direction[3] = 0;
+         break;
+     }
+     return cctv;
+   }
   }
 }
