@@ -1,60 +1,56 @@
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-public class Main {
-
-  public static void main(String[] args) throws Exception {
+class Main {
+  public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     StringTokenizer stringTokenizer = new StringTokenizer(br.readLine());
     int N = Integer.valueOf(stringTokenizer.nextToken());
     int K = Integer.valueOf(stringTokenizer.nextToken());
-    List<Gemstone> list = new ArrayList<>();
-    List<Integer> bag = new ArrayList<>();
-    PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Collections.reverseOrder());
     long answer = 0;
-
-
-    for (int i=0; i<N; i++){
-      stringTokenizer = new StringTokenizer(br.readLine());
-      int weight = Integer.valueOf(stringTokenizer.nextToken());
-      int price = Integer.valueOf(stringTokenizer.nextToken());
-      list.add(new Gemstone(weight,price));
-    }
-
-    for (int i=0; i<K; i++){
-      bag.add(Integer.valueOf(br.readLine()));
-    }
-
-    Collections.sort(list, new Comparator<Gemstone>() {
+    PriorityQueue<Jam> arrayList = new PriorityQueue<>(new Comparator<Jam>() {
       @Override
-      public int compare(Gemstone o1, Gemstone o2) {
+      public int compare(Jam o1, Jam o2) {
         return o1.weight-o2.weight;
       }
     });
-    Collections.sort(bag);
+    PriorityQueue<Integer> bag = new PriorityQueue<>();
+    PriorityQueue<Integer> tmp = new PriorityQueue<>(Collections.reverseOrder());
 
-    int j = 0;
-    for (int i=0; i<K; i++){
-      while (j<N && list.get(j).weight<=bag.get(i)){
-        priorityQueue.add(list.get(j).price);
-        j++;
+    for (int i = 0; i < N; i++) {
+      stringTokenizer = new StringTokenizer(br.readLine());
+      int weight = Integer.valueOf(stringTokenizer.nextToken());
+      int price = Integer.valueOf(stringTokenizer.nextToken());
+
+      arrayList.add(new Jam(weight,price));
+    }
+    for (int i = 0; i < K; i++) {
+      bag.add(Integer.valueOf(br.readLine()));
+    }
+
+    while (!bag.isEmpty()) {
+      int b = bag.poll();
+
+      while (!arrayList.isEmpty()&&b>=arrayList.peek().weight) {
+        tmp.add(arrayList.poll().price);
       }
-      if (!priorityQueue.isEmpty()){
-        answer+= priorityQueue.poll();
+      if (!tmp.isEmpty()) {
+        answer += tmp.peek();
+        tmp.poll();
       }
     }
     System.out.println(answer);
   }
-  static class Gemstone{
+  static class Jam{
     int weight;
     int price;
 
-    public Gemstone(int weight, int price) {
+    public Jam(int weight, int price){
       this.weight = weight;
       this.price = price;
     }
