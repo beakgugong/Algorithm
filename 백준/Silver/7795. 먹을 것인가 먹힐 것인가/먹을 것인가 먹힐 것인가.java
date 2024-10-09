@@ -1,50 +1,59 @@
 import java.io.*;
 import java.util.*;
+import java.util.function.IntBinaryOperator;
 
-class Main {
+public class Main {
+  static int N;
+  static int M;
+
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    int T = Integer.valueOf(br.readLine());
-    for (int i=0; i<T; i++) {
+    int T = Integer.parseInt(br.readLine());
+
+    for (int j=0; j<T; j++) {
       StringTokenizer st = new StringTokenizer(br.readLine());
-      int N = Integer.valueOf(st.nextToken());
-      int M = Integer.valueOf(st.nextToken());
-      ArrayList<Integer> arrayListA = new ArrayList<>();
-      ArrayList<Integer> arrayListB = new ArrayList<>();
+      int aSize = Integer.parseInt(st.nextToken());
+      int bSize = Integer.parseInt(st.nextToken());
+      int[] a = new int[aSize];
+      int[] b = new int[bSize];
       st = new StringTokenizer(br.readLine());
 
-      for (int j=0; j<N; j++){
-        arrayListA.add(Integer.valueOf(st.nextToken()));
+      for (int i = 0; i < aSize; i++) {
+        a[i] = Integer.parseInt(st.nextToken());
       }
 
       st = new StringTokenizer(br.readLine());
-      for (int k=0; k<M; k++){
-        arrayListB.add(Integer.valueOf(st.nextToken()));
+
+      for (int i = 0; i < bSize; i++) {
+        b[i] = Integer.parseInt(st.nextToken());
       }
 
-      Collections.sort(arrayListA);
-      Collections.sort(arrayListB);
 
-      int count = 0;
+      Arrays.sort(b);
 
-      for (int j=0; j<N; j++){
-        int A = arrayListA.get(j);
+      int answer = 0;
+      for (int i=0; i<aSize; i++) {
+
         int low = 0;
-        int high = arrayListB.size()-1;
-        int tmp = -1;
-        while (low<=high) {
-          int mid = (high+low)/2;
-          if (arrayListB.get(mid) >= A) {
-            high = mid-1;
-          }
-          else {
-            low = mid+1;
-            tmp = Math.max(mid,tmp);
+        int high = bSize - 1;
+        int count = 0;
+
+        while (low <= high) {
+          int mid = (low + high) / 2;
+
+          if (a[i] > b[mid]) {
+            low = mid + 1;
+            count = low;
+          }else if (a[i] <= b[mid]) {
+            high = mid - 1;
           }
         }
-        count+=(tmp+1);
+        answer+=count;
       }
-      System.out.println(count);
+      System.out.println(answer);
     }
+
+
+
   }
 }
