@@ -3,8 +3,6 @@ import java.util.*;
 import java.util.function.IntBinaryOperator;
 
 public class Main {
-  static int N;
-  static int M;
 
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,7 +25,6 @@ public class Main {
       for (int i = 0; i < bSize; i++) {
         b[i] = Integer.parseInt(st.nextToken());
       }
-
 
       Arrays.sort(b);
 
@@ -52,8 +49,5 @@ public class Main {
       }
       System.out.println(answer);
     }
-
-
-
   }
 }
