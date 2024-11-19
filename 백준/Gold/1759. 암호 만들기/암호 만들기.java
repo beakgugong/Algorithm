@@ -32,7 +32,7 @@ public class Main {
     }
   }
 
-  static void dfs(int index, int vowelCount, int consonantCount, String str) {
+  static void dfs(int current, int vowelCount, int consonantCount, String str) {
     if (str.length() == L) {
       if (vowelCount >= 1 && consonantCount >= 2) {
         answer.add(str);
@@ -40,12 +40,11 @@ public class Main {
       return;
     }
 
-    for (int i = index; i < C; i++) {
-      char current = alpha[i];
-      if (vowels.indexOf(current) >= 0) {
-        dfs(i + 1, vowelCount + 1, consonantCount, str + current);
+    for (int i = current; i < C; i++) {
+      if (vowels.indexOf(alpha[i]) >= 0) {
+        dfs(i + 1, vowelCount + 1, consonantCount, str + alpha[i]);
       } else {
-        dfs(i + 1, vowelCount, consonantCount + 1, str + current);
+        dfs(i + 1, vowelCount, consonantCount + 1, str + alpha[i]);
       }
     }
   }
